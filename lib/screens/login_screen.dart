@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_cosmeticnew/screens/signup_screen.dart';
-import 'signup_screen.dart';
 import 'profile_screen.dart';
 import '../services/api_service.dart'; // เรียกใช้ service
 
@@ -20,14 +19,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
     final response = await _apiService.login(email, password);
     if (response != null) {
-// Navigate to Profile Screen
-
-      Navigator.push(
+      // Navigate to Profile Screen
+      Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => ProfileScreen(user: response)),
       );
     } else {
-// Show error
+      // Show error
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Login Failed')),
       );

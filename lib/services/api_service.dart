@@ -39,40 +39,6 @@ class ApiService {
     return response.statusCode == 200;
   }
 
-  Future<bool> deleteProduct(int productId) async {
-    final response = await http.delete(
-      Uri.parse('$baseUrl/products/$productId'),
-    );
-    return response.statusCode == 204; // 204 No Content หมายถึงลบสำเร็จ
-  }
-
-  Future<bool> updateProduct(int productId, String productName,
-      String description, double price, int stockQuantity) async {
-    final response = await http.put(
-      Uri.parse('$baseUrl/products/$productId'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({
-        'name': productName,
-        'description': description,
-        'price': price,
-        'stockQuantity': stockQuantity,
-      }),
-    );
-    return response.statusCode == 200; // 200 OK หมายถึงอัปเดตสำเร็จ
-  }
-
-  Future<Map<String, dynamic>?> getProductDetails(int productId) async {
-    final response = await http.get(
-      Uri.parse('$baseUrl/products/$productId'),
-      headers: {'Content-Type': 'application/json'},
-    );
-
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body);
-    }
-    return null;
-  }
-
   Future<Map<String, dynamic>?> updateProfile(
       int userId, String username, String email, String password) async {
     final response = await http.put(

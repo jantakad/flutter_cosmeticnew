@@ -52,4 +52,7 @@ class ApiService {
     }
     return null;
   }
+
+  addproduct(
+      String name, String description, double price, int stockQuantity) {}
 }

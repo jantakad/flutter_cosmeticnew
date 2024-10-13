@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_cosmeticnew/screens/edit_profile_screen.dart';
 import '../services/api_service.dart';
 import 'login_screen.dart';
-import 'edit_profile_screen.dart';
+import 'product_screen.dart'; // นำเข้า ProductScreen
 
 class ProfileScreen extends StatelessWidget {
   final Map<String, dynamic> user;
@@ -53,6 +54,17 @@ class ProfileScreen extends StatelessWidget {
               ElevatedButton(
                 onPressed: () => _deleteAccount(context),
                 child: Text('Delete Account'),
+              ),
+              SizedBox(height: 20), // ขนาดว่างเพิ่มระหว่างปุ่ม
+              ElevatedButton(
+                onPressed: () {
+                  // Navigate to ProductScreen
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ProductScreen()),
+                  );
+                },
+                child: Text('Add Product'),
               ),
             ],
           ),

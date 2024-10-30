@@ -1,8 +1,18 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/material.dart';
 import '../services/api_service.dart';
+// ignore: unused_import
 import 'login_screen.dart';
 
+// ignore: use_key_in_widget_constructors
 class ProductScreen extends StatefulWidget {
+  late String name;
+
+  String? get imgUrl => null;
+
+  String? get detail => null;
+
   @override
   _ProductScreenState createState() => _ProductScreenState();
 }

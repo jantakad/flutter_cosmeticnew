@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_cosmeticnew/screens/product_list_screen.dart';
 import 'package:flutter_cosmeticnew/screens/product_screen.dart';
 
 // ignore: must_be_immutable
 class ProductDtailScreen extends StatefulWidget {
-  ProductScreen data;
+  final ProductScreen data;
 
-  var _widget;
   ProductDtailScreen({super.key, required this.data});
 
   @override
@@ -17,7 +17,13 @@ class _ProductDtailScreen extends State<ProductDtailScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.data.name),
+        title: Text(widget.data.name ?? 'ไม่มีชื่อสินค้า'), // ใช้ชื่อที่ปลอดภัย
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context); // กลับไปยังหน้าก่อนหน้า
+          },
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -25,17 +31,24 @@ class _ProductDtailScreen extends State<ProductDtailScreen> {
           child: Column(
             children: [
               Image.network(
-                widget._widget!.imgUrl,
+                widget.data.imgUrl ??
+                    'assets/placeholder.png', // ใช้ placeholder ถ้า imgUrl เป็น null
+                errorBuilder: (context, error, stackTrace) {
+                  return Image.asset(
+                      'assets/placeholder.png'); // Placeholder image
+                },
               ),
-              SizedBox(
-                height: 100,
-              ),
+              SizedBox(height: 20),
               Text(
-                widget.data.name,
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                widget.data.name ?? 'ไม่มีชื่อสินค้า', // ใช้ชื่อที่ปลอดภัย
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
               ),
               SizedBox(height: 10),
-              Text(widget._widget!.detail),
+              Text(
+                widget.data.detail ??
+                    'ไม่มีรายละเอียด', // ใช้รายละเอียดที่ปลอดภัย
+                style: TextStyle(fontSize: 16),
+              ),
             ],
           ),
         ),

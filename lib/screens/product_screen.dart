@@ -1,17 +1,16 @@
 // ignore_for_file: must_be_immutable
 
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import '../services/api_service.dart';
-// ignore: unused_import
-import 'login_screen.dart';
+import 'dart:io';
 
-// ignore: use_key_in_widget_constructors
 class ProductScreen extends StatefulWidget {
-  late String name;
+  get detail => null;
 
-  String? get imgUrl => null;
+  get name => null;
 
-  String? get detail => null;
+  get imgUrl => null;
 
   @override
   _ProductScreenState createState() => _ProductScreenState();
@@ -25,20 +24,43 @@ class _ProductScreenState extends State<ProductScreen> {
   final TextEditingController _productStockController = TextEditingController();
   final ApiService _apiService = ApiService();
 
+  File? _image;
+
+  Future<void> _pickImage() async {
+    final ImagePicker _picker = ImagePicker();
+    final XFile? image = await _picker.pickImage(source: ImageSource.camera);
+
+    if (image != null) {
+      setState(() {
+        _image = File(image.path);
+      });
+    }
+  }
+
   void _addProduct() async {
     final name = _productNameController.text;
     final description = _productDescriptionController.text;
     final price = double.tryParse(_productPriceController.text) ?? 0.0;
     final stockQuantity = int.tryParse(_productStockController.text) ?? 0;
 
-    final response =
-        await _apiService.addproduct(name, description, price, stockQuantity);
+    if (_image == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('กรุณาถ่ายรูปสินค้าก่อนเพิ่มข้อมูล')),
+      );
+      return;
+    }
+
+    final response = await _apiService.addProductWithImage(
+      name,
+      description,
+      price,
+      stockQuantity,
+      _image!,
+    );
 
     if (response != null) {
-      // Navigate back to the previous screen or product list
       Navigator.pop(context);
     } else {
-      // Show error
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Product addition failed')),
       );
@@ -75,7 +97,23 @@ class _ProductScreenState extends State<ProductScreen> {
               keyboardType: TextInputType.number,
             ),
             SizedBox(height: 20),
-            ElevatedButton(onPressed: _addProduct, child: Text('Add Product')),
+            ElevatedButton(
+              onPressed: _pickImage,
+              child: Text('Capture Image'),
+            ),
+            SizedBox(height: 20),
+            if (_image != null)
+              Image.file(
+                _image!,
+                height: 200,
+                width: 200,
+                fit: BoxFit.cover,
+              ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: _addProduct,
+              child: Text('Add Product'),
+            ),
           ],
         ),
       ),

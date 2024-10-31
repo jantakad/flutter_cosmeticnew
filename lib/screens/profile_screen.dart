@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_cosmeticnew/screens/edit_profile_screen.dart';
+import 'package:flutter_cosmeticnew/screens/product_list_screen.dart';
 import '../services/api_service.dart';
 import 'login_screen.dart';
 import 'product_screen.dart'; // นำเข้า ProductScreen
@@ -61,10 +62,11 @@ class ProfileScreen extends StatelessWidget {
                   // Navigate to ProductScreen
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => ProductScreen()),
+                    MaterialPageRoute(
+                        builder: (context) => ProductListScreen()),
                   );
                 },
-                child: Text('Add Product'),
+                child: Text(' Product'),
               ),
             ],
           ),

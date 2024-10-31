@@ -36,7 +36,7 @@ class ProductService {
     return null;
   }
 
-  updateProduct(productData, File file, String proname, double price) {}
+  updateProduct(productData, File file, String proname, double price, int i) {}
 
   deleteProduct(productData) {}
 }

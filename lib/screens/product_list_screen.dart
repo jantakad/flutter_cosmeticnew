@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_cosmeticnew/screens/product_screen.dart';
+import 'package:flutter_cosmeticnew/screens/edit_product_screen.dart'; // เพิ่มการนำเข้า EditProductScreen
 import 'product_view_screen.dart';
 import '../../services/product_service.dart';
 
@@ -19,12 +20,10 @@ class _ProductListScreenState extends State<ProductListScreen> {
     futureProduct = _fetchProducts();
   }
 
-  // ฟังก์ชันดึงข้อมูลสินค้าจาก ProductService
   Future<List<dynamic>> _fetchProducts() async {
     return await ProductService().fetchProducts();
   }
 
-  // ฟังก์ชันสำหรับรีเฟรชข้อมูลสินค้า
   void _refreshProducts() {
     setState(() {
       futureProduct = _fetchProducts();
@@ -35,9 +34,8 @@ class _ProductListScreenState extends State<ProductListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('รายการข้อมูลสินค้า'),
-        backgroundColor: Colors.amber,
-      ),
+          title: Text('รายการข้อมูลสินค้า'),
+          backgroundColor: Color(0xFFffcccc)),
       body: FutureBuilder<List<dynamic>>(
         future: futureProduct,
         builder: (context, snapshot) {
@@ -57,25 +55,31 @@ class _ProductListScreenState extends State<ProductListScreen> {
               itemCount: snapshot.data!.length,
               itemBuilder: (context, index) {
                 final product = snapshot.data![index];
-
-                // แสดงข้อมูลสินค้าใน Card
                 return Card(
                   margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                   child: ListTile(
-                    leading: product['image'] != null
-                        ? Image.network(
-                            '${ProductService().imageUrl}/${product['image']}',
-                            width: 50,
-                            height: 50,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) {
-                              return Icon(Icons.image_not_supported);
-                            },
-                          )
-                        : Icon(Icons.image), // Icon placeholder หากไม่มีรูปภาพ
                     title: Text(product['productName'] ?? 'ชื่อสินค้าไม่ระบุ'),
                     subtitle: Text(
-                        'ราคา: ${product['price']?.toString() ?? '0'} บาท'),
+                      'ราคา: ฿${product['price']?.toString() ?? '0'} บาท',
+                    ),
+                    trailing: IconButton(
+                      icon: Icon(Icons.edit), // เพิ่มไอคอนแก้ไข
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => EditProductScreen(
+                              productData:
+                                  product, // ส่งข้อมูลสินค้าไปยังหน้าจอแก้ไข
+                            ),
+                          ),
+                        ).then((result) {
+                          if (result == true) {
+                            _refreshProducts(); // อัปเดตรายการสินค้าเมื่อกลับมา
+                          }
+                        });
+                      },
+                    ),
                     onTap: () {
                       Navigator.push(
                         context,
@@ -102,7 +106,6 @@ class _ProductListScreenState extends State<ProductListScreen> {
             ),
           );
 
-          // หากมีการเพิ่มสินค้าใหม่ จะทำการรีเฟรชรายการสินค้า
           if (result == true) {
             _refreshProducts();
           }

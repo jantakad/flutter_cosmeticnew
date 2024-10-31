@@ -1,80 +1,90 @@
 import 'package:flutter/material.dart';
-import '../../services/api_service.dart';
-import 'product_view_screen.dart';
+import '../../services/product_service.dart';
+import 'product_list_screen.dart';
 
-class ProductAddScreen extends StatefulWidget {
-  @override
-  _ProductAddScreenState createState() => _ProductAddScreenState();
-}
+class ProductViewScreen extends StatelessWidget {
+  final Map<String, dynamic> productData;
 
-class _ProductAddScreenState extends State<ProductAddScreen> {
-  final TextEditingController _productNameController = TextEditingController();
-  final TextEditingController _productDescriptionController =
-      TextEditingController();
-  final TextEditingController _productPriceController = TextEditingController();
-  final TextEditingController _productStockController = TextEditingController();
-  final ApiService _apiService = ApiService();
-
-  void _addProduct() async {
-    final productName = _productNameController.text;
-    final description = _productDescriptionController.text;
-    final price = double.tryParse(_productPriceController.text) ?? 0.0;
-    final stockQuantity = int.tryParse(_productStockController.text) ?? 0;
-
-    final response = await _apiService.addProduct(
-        productName, description, price, stockQuantity);
-
-    if (response != null) {
-      // นำทางไปยัง ProductViewScreen โดยส่งข้อมูลสินค้าที่เพิ่ม
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ProductViewScreen(productData: response),
-        ),
-      );
-    } else {
-      // แสดงข้อความแสดงข้อผิดพลาด
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('ไม่สามารถเพิ่มสินค้าได้')),
-      );
-    }
-  }
+  const ProductViewScreen({super.key, required this.productData});
 
   @override
   Widget build(BuildContext context) {
+    final imageUrl = ProductService().imageUrl ?? '';
+    final imagePath =
+        productData['image'] ?? ''; // ใช้ฟิลด์ image จาก productData
+
+    // ตรวจสอบข้อมูลที่ได้
+    print("ProductName Data: $productData"); // เพิ่มการพิมพ์ข้อมูลใน console
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('เพิ่มสินค้า'),
-        backgroundColor: Colors.amber,
+        title: Text('รายละเอียดสินค้า'),
+        backgroundColor: Color(0xFFefbe7e),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context); // กลับไปที่หน้าก่อนหน้า
+          },
+        ),
       ),
-      body: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: _productNameController,
-              decoration: InputDecoration(labelText: 'ชื่อสินค้า'),
-            ),
-            TextField(
-              controller: _productDescriptionController,
-              decoration: InputDecoration(labelText: 'รายละเอียดสินค้า'),
-            ),
-            TextField(
-              controller: _productPriceController,
-              decoration: InputDecoration(labelText: 'ราคา'),
-              keyboardType: TextInputType.number,
-            ),
-            TextField(
-              controller: _productStockController,
-              decoration: InputDecoration(labelText: 'จำนวนในสต๊อก'),
-              keyboardType: TextInputType.number,
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _addProduct,
-              child: Text('เพิ่มสินค้า'),
-            ),
-          ],
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(12.0),
+                child: Image.network(
+                  '$imageUrl/$imagePath', // ใช้ imagePath ที่ได้รับจาก productData
+                  width: double.infinity,
+                  height: 250,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Image.asset(
+                      'assets/placeholder.png', // Placeholder image
+                    );
+                  },
+                ),
+              ),
+              SizedBox(height: 16),
+              Text(
+                '${productData['productName']?.toString() ?? 'ไม่มีชื่อสินค้า'}',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(height: 8),
+              Text(
+                '${productData['description']?.toString() ?? 'ไม่มีรายละเอียด'}',
+                style: TextStyle(fontSize: 16),
+              ),
+              SizedBox(height: 8),
+              Text(
+                'ราคา: ${productData['price']?.toString() ?? '0'} บาท',
+                style: TextStyle(fontSize: 18, color: Colors.green),
+              ),
+              SizedBox(height: 20),
+              ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                  padding: EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+                  backgroundColor: Color(0xFFefbe7e),
+                ),
+                onPressed: () {
+                  // นำทางกลับไปที่ ProductListScreen
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ProductListScreen(),
+                    ),
+                  );
+                },
+                label: Text('กลับไปยังรายการสินค้า'),
+                icon: Icon(Icons.list),
+              ),
+            ],
+          ),
         ),
       ),
     );

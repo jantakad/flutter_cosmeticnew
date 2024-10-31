@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_cosmeticnew/screens/product_list_screen.dart';
 import 'package:flutter_cosmeticnew/screens/product_screen.dart';
+import '../../services/product_service.dart';
 
 // ignore: must_be_immutable
 class ProductDtailScreen extends StatefulWidget {

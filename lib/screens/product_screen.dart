@@ -1,6 +1,7 @@
 // ignore_for_file: must_be_immutable
 
 import 'package:flutter/material.dart';
+import 'package:flutter_cosmeticnew/screens/product_list_screen.dart';
 import 'package:image_picker/image_picker.dart';
 import '../services/api_service.dart';
 import 'dart:io';
@@ -62,7 +63,7 @@ class _ProductScreenState extends State<ProductScreen> {
       Navigator.pop(context);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Product addition failed')),
+        SnackBar(content: Text('')),
       );
     }
   }
@@ -72,7 +73,7 @@ class _ProductScreenState extends State<ProductScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('รายการสินค้า'),
-        backgroundColor: Colors.amber,
+        backgroundColor: Color(0xFFD67679),
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
@@ -105,13 +106,18 @@ class _ProductScreenState extends State<ProductScreen> {
             if (_image != null)
               Image.file(
                 _image!,
-                height: 200,
-                width: 200,
+                height: 100,
+                width: 100,
                 fit: BoxFit.cover,
               ),
             SizedBox(height: 20),
             ElevatedButton(
-              onPressed: _addProduct,
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ProductListScreen()),
+                );
+              },
               child: Text('Add Product'),
             ),
           ],

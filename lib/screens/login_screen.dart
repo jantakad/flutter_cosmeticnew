@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_cosmeticnew/screens/signup_screen.dart';
 import 'profile_screen.dart';
 import '../services/api_service.dart'; // เรียกใช้ service
+import 'edit_product_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -36,7 +37,8 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Login')),
-      body: Padding(
+      body: Container(
+        // กำหนดสีพื้นหลังที่ต้องการ
         padding: EdgeInsets.all(16.0),
         child: Column(
           children: [

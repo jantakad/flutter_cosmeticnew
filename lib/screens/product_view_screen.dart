@@ -18,51 +18,70 @@ class ProductViewScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('รายละเอียดสินค้า'),
-        backgroundColor: Colors.amber,
+        backgroundColor: Color(0xFFD67679),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context); // กลับไปที่หน้าก่อนหน้า
+          },
+        ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: [
-            SizedBox(
-              width: double.infinity,
-              child: Image.network(
-                '$imageUrl/$imagePath',
-                errorBuilder: (context, error, stackTrace) {
-                  return Image.asset(
-                      'assets/placeholder.png'); // Placeholder image
-                },
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(12.0),
+                child: Image.network(
+                  '$imageUrl/$imagePath',
+                  width: double.infinity,
+                  height: 250,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Image.asset(
+                        'assets/placeholder.png'); // Placeholder image
+                  },
+                ),
               ),
-            ),
-            SizedBox(height: 10),
-            Text(
-              '${productData['productName']?.toString() ?? '0'} ',
-              style: TextStyle(fontSize: 20),
-            ),
-            SizedBox(height: 10),
-            Text(
-              '${productData['description']?.toString() ?? '0'} ',
-              style: TextStyle(fontSize: 16),
-            ),
-            SizedBox(height: 10),
-            Text(
-              '${productData['price']?.toString() ?? '0'} บาท',
-              style: TextStyle(fontSize: 16),
-            ),
-            SizedBox(height: 15),
-            ElevatedButton.icon(
-              onPressed: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ProductListScreen(),
-                  ),
-                );
-              },
-              label: Text('กลับไปยังรายการสินค้า'),
-              icon: Icon(Icons.list),
-            ),
-          ],
+              SizedBox(height: 16),
+              Text(
+                '${productData['productName']?.toString() ?? 'ไม่มีชื่อสินค้า'}',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(height: 8),
+              Text(
+                '${productData['description']?.toString() ?? 'ไม่มีรายละเอียด'}',
+                style: TextStyle(fontSize: 16),
+              ),
+              SizedBox(height: 8),
+              Text(
+                'ราคา: ${productData['price']?.toString() ?? '0'} บาท',
+                style: TextStyle(fontSize: 18, color: Colors.green),
+              ),
+              ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                  padding: EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+                  backgroundColor: Colors.amber,
+                ),
+                onPressed: () {
+                  // นำทางกลับไปที่ ProductListScreen
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ProductListScreen(),
+                    ),
+                  );
+                },
+                label: Text('กลับไปยังรายการสินค้า'),
+                icon: Icon(Icons.list),
+              ),
+            ],
+          ),
         ),
       ),
     );
